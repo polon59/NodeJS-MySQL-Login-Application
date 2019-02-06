@@ -36,7 +36,7 @@ app.post('/api/courses', (req, res) =>{
     const {error} = validateCourse(req.body);
 
     if (error) {
-        res.status(400).send(validationResult.error.details[0].message);
+        res.status(400).send(error.details[0].message);
     }
     else{
         const course = {
@@ -58,7 +58,7 @@ app.put('/api/courses/:id', (req, res) =>{
         const {error} = validateCourse(req.body);
 
         if (error) {
-            res.status(400).send(validationResult.error.details[0].message);
+            res.status(400).send(error.details[0].message);
         }
         else{
             result.name = req.body.name;

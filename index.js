@@ -29,9 +29,17 @@ app.get("/api/courses/:id", (req, res) =>{
 });
 
 app.post('/api/courses', (req, res) =>{
-    if (req.body.length < 3 || !req.body.name) {
-        res.status(400).send("name is reqiured and must be longer than 3 characters");
-    }else{
+    const schema = {
+        name: Joi.string().min(3).required()
+    };
+
+    const validationResult = Joi.validate(req.body, schema);
+    console.log(validationResult);
+
+    if (validationResult.error) {
+        res.status(400).send(validationResult.error.details[0].message);
+    }
+    else{
         const course = {
             id: courses.length+1,
             name: req.body.name

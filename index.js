@@ -23,7 +23,7 @@ app.get("/api/courses", (req, res) =>{
 
 
 app.get("/api/courses/:id", (req, res) =>{
-    const result = courses.find(c => c.id === parseInt(req.params.id));
+    const result = findCourseWithGivenID(req.params.id);
     if (!result){
         res.status(404).send("This course does not exist.");
     }else{
@@ -50,7 +50,7 @@ app.post('/api/courses', (req, res) =>{
 
 
 app.put('/api/courses/:id', (req, res) =>{
-   const result = courses.find(c => c.id === parseInt(req.params.id));
+   const result = findCourseWithGivenID(req.params.id);
     if (!result){
         res.status(404).send("This course does not exist.");
     }
@@ -66,6 +66,16 @@ app.put('/api/courses/:id', (req, res) =>{
         }
     } 
 });
+
+
+app.delete('/api/courses/:id', (req, res) => {
+    const course = findCourseWithGivenID(req.params.id);
+});
+
+
+function findCourseWithGivenID(courseID) {
+    return courses.find(course => course.id === parseInt(courseID));
+}
 
 
 function validateCourse(course){

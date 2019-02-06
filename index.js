@@ -1,3 +1,4 @@
+const Joi = require('joi');
 const express = require('express');
 const app = express();
 
@@ -28,12 +29,16 @@ app.get("/api/courses/:id", (req, res) =>{
 });
 
 app.post('/api/courses', (req, res) =>{
-    const course = {
-        id: courses.length+1,
-        name: req.body.name
-    };
-    courses.push(course);
-    res.send(course);
+    if (req.body.length < 3 || !req.body.name) {
+        res.status(400).send("name is reqiured and must be longer than 3 characters");
+    }else{
+        const course = {
+            id: courses.length+1,
+            name: req.body.name
+        };
+        courses.push(course);
+        res.send(course);
+    }
 });
 
 

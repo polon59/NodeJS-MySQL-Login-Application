@@ -1,7 +1,6 @@
 const Joi = require('joi');
 const express = require('express');
 const app = express();
-
 app.use(express.json());
 
 const courses = [
@@ -13,7 +12,7 @@ const courses = [
 
 
 app.get("/", (req, res) =>{
-    res.send("hello");
+    res.send("main page");
 });
 
 
@@ -23,11 +22,11 @@ app.get("/api/courses", (req, res) =>{
 
 
 app.get("/api/courses/:id", (req, res) =>{
-    const result = findCourseWithGivenID(req.params.id);
-    if (!result){
+    const course = findCourseWithGivenID(req.params.id);
+    if (!course){
         res.status(404).send("This course does not exist.");
     }else{
-        res.send(result);
+        res.send(course);
     } 
 });
 
@@ -50,8 +49,9 @@ app.post('/api/courses', (req, res) =>{
 
 
 app.put('/api/courses/:id', (req, res) =>{
-   const result = findCourseWithGivenID(req.params.id);
-    if (!result){
+   const course = findCourseWithGivenID(req.params.id);
+
+    if (!course){
         res.status(404).send("This course does not exist.");
     }
     else{
@@ -61,8 +61,8 @@ app.put('/api/courses/:id', (req, res) =>{
             res.status(400).send(error.details[0].message);
         }
         else{
-            result.name = req.body.name;
-            res.send(result);
+            course.name = req.body.name;
+            res.send(course);
         }
     } 
 });
@@ -70,13 +70,22 @@ app.put('/api/courses/:id', (req, res) =>{
 
 app.delete('/api/courses/:id', (req, res) => {
     const course = findCourseWithGivenID(req.params.id);
+    if (!course){
+        res.status(404).send("This course does not exist.");
+    }
+    else{
+        const indexOfCourse = courses.indexOf(course);
+        courses.splice(indexOfCourse,1);
+        res.send(course);
+    }
 });
+
+
 
 
 function findCourseWithGivenID(courseID) {
     return courses.find(course => course.id === parseInt(courseID));
 }
-
 
 function validateCourse(course){
     const schema = {
